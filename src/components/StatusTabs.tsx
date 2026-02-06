@@ -1,40 +1,52 @@
 import { Box, Tabs } from "@chakra-ui/react";
-import { REQUEST_STATUS_TABS } from "../../mocks";
+import type { Status } from "../lib/types";
+import { statusTabs } from "../lib/mock-data";
 import { MdOutlineFilterAlt } from "react-icons/md";
 
-export const TabsGroup = () => {
-  const tabsArray = Object.entries(REQUEST_STATUS_TABS);
+interface StatusTabsProps {
+  onStatusChange: (status: Status | "all") => void;
+  showOnlyMine: boolean;
+  onShowOnlyMineChange: (value: boolean) => void;
+}
+
+export function StatusTabs({
+  onStatusChange,
+  showOnlyMine,
+  onShowOnlyMineChange,
+}: StatusTabsProps) {
   return (
     <Tabs.Root variant="enclosed">
       <Tabs.List display="flex" gap="10px" bg="white" p={0}>
-        {tabsArray.slice(0, -1).map(([key, label]) => (
+        {statusTabs.map((tab) => (
           <Tabs.Trigger
             bg="#F1F1F1"
-            key={key}
-            value={key}
+            key={tab.value}
+            value={tab.value}
             _selected={{
               bg: "black",
               color: "white",
               borderColor: "black",
             }}
+            onClick={() => onStatusChange(tab.value)}
           >
-            {label}
+            {tab.label}
           </Tabs.Trigger>
         ))}
         <Box w="3px" bg="#D9E1EC" mx={2} />
         <Tabs.Trigger
           bg="#F1F1F1"
-          value={tabsArray[tabsArray.length - 1][0]}
+          value="myRequests"
           _selected={{
             bg: "black",
             color: "white",
             borderColor: "black",
           }}
+          onClick={() => onShowOnlyMineChange(!showOnlyMine)}
         >
           <MdOutlineFilterAlt />
-          {tabsArray[tabsArray.length - 1][1]}
+          Показать только мои
         </Tabs.Trigger>
       </Tabs.List>
     </Tabs.Root>
   );
-};
+}

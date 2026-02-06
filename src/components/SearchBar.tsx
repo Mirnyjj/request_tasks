@@ -1,9 +1,20 @@
-import { Button, Flex, Input, InputGroup, Text } from "@chakra-ui/react";
+import { Flex, Input, Button, InputGroup, Text } from "@chakra-ui/react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
+
 import { MdPictureAsPdf } from "react-icons/md";
 
-export const RequestManager = () => {
+interface SearchBarProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onCreateNew?: () => void;
+}
+
+export function SearchBar({
+  searchQuery,
+  onSearchChange,
+  onCreateNew,
+}: SearchBarProps) {
   return (
     <Flex
       w="100%"
@@ -15,7 +26,12 @@ export const RequestManager = () => {
       py={4}
     >
       <InputGroup startElement={<CiSearch size="24px" color="#B0B0B0" />}>
-        <Input flex={1} placeholder="Поиск по номеру или теме заявки" />
+        <Input
+          flex={1}
+          placeholder="Поиск по номеру или теме заявки"
+          onChange={(e) => onSearchChange(e.target.value)}
+          value={searchQuery}
+        />
       </InputGroup>
 
       <Button
@@ -31,10 +47,17 @@ export const RequestManager = () => {
       >
         <MdPictureAsPdf color="grey" size="15px" /> Экспорт
       </Button>
-      <Button px="15px" py="8px" display="flex" gap="5px" borderRadius="4px">
+      <Button
+        px="15px"
+        py="8px"
+        display="flex"
+        gap="5px"
+        borderRadius="4px"
+        onClick={onCreateNew}
+      >
         <AiOutlinePlus size="14px" />
         <Text>Создать новую заявку</Text>
       </Button>
     </Flex>
   );
-};
+}
