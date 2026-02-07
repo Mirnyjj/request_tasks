@@ -1,8 +1,6 @@
 import { Flex, Input, Button, InputGroup, Text } from "@chakra-ui/react";
-import { Flex, Input, Button, InputGroup, Text } from "@chakra-ui/react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
-
 
 import { MdPictureAsPdf } from "react-icons/md";
 
@@ -35,12 +33,6 @@ export function SearchBar({
           onChange={(e) => onSearchChange(e.target.value)}
           value={searchQuery}
         />
-        <Input
-          flex={1}
-          placeholder="Поиск по номеру или теме заявки"
-          onChange={(e) => onSearchChange(e.target.value)}
-          value={searchQuery}
-        />
       </InputGroup>
 
       <Button
@@ -64,18 +56,9 @@ export function SearchBar({
         borderRadius="4px"
         onClick={onCreateNew}
       >
-      <Button
-        px="15px"
-        py="8px"
-        display="flex"
-        gap="5px"
-        borderRadius="4px"
-        onClick={onCreateNew}
-      >
         <AiOutlinePlus size="14px" />
         <Text>Создать новую заявку</Text>
       </Button>
     </Flex>
   );
-}
 }
