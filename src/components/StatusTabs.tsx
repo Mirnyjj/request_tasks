@@ -25,7 +25,7 @@ export function StatusTabs({
     })(),
     md: statusTabs,
   });
-  console.log(tabsForRender, "tabsForRender");
+
   return (
     <Tabs.Root
       value={activeStatus === "all" ? undefined : activeStatus}
