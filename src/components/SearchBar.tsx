@@ -1,14 +1,9 @@
+import type { SearchBarProps } from "@/lib/types";
 import { Flex, Input, Button, InputGroup, Text } from "@chakra-ui/react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
 
 import { MdPictureAsPdf } from "react-icons/md";
-
-interface SearchBarProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  onCreateNew: () => void;
-}
 
 export function SearchBar({
   searchQuery,

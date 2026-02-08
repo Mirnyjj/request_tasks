@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
-import type { ColumnFilters, Request } from "../src/lib/types";
+import type { ColumnFilters, Request } from "@/lib/types";
 import {
   getReactionDuration,
   getResolutionDuration,
-} from "../src/utils/formatDuration";
+} from "@/utils/formatDuration";
+import { useMemo, useState } from "react";
 
 export function useRequestsTable(requests: Request[]) {
   const [filters, setFilters] = useState<ColumnFilters>({

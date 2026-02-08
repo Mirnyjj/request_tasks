@@ -44,6 +44,7 @@ export default function PriorityBadge({ priority }: { priority: Priority }) {
       )}
       {icon === "diamond" && <PiDiamond size="24px" color={color} />}
       <Text
+        display={{ base: "none", md: "flex" }}
         fontFamily="Inter"
         fontWeight={500}
         fontSize="12px"

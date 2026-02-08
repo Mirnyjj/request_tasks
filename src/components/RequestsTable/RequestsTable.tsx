@@ -3,12 +3,12 @@ import type { ColumnFilters, Request } from "../../lib/types";
 import ColumnHeader from "./ColumnHeader";
 import PriorityBadge from "./PriorityBadge";
 import StatusBadge from "./StatusBadge";
-import { useRequestsTable } from "../../../hooks/useRequestTable";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { renderSLACell } from "./RenderSLACell";
 import { formatDateTimeWithTs } from "@/utils/formatDateTimeWithTs";
 import { useEffect, useState } from "react";
 import { SkeletonTable } from "./SkeletonTable";
+import { useRequestsTable } from "@/hooks/useRequestTable";
 
 interface RequestsTableProps {
   requests: Request[];
@@ -189,8 +189,8 @@ export function RequestsTable({ requests }: RequestsTableProps) {
       </Table.Header>
 
       <Table.Body w="100%">
-        {rawData.map((request) => (
-          <Table.Row key={request.id}>
+        {rawData.map((request, ind) => (
+          <Table.Row key={ind}>
             <Table.Cell>{request.id}</Table.Cell>
             <Table.Cell>
               <Flex gap="2">

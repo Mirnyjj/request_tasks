@@ -20,14 +20,14 @@ import ImageAva from "../assets/аааа.png";
 import { useEffect, useState } from "react";
 
 const items = [
-  { id: "reference/apteki", label: "Аптеки" },
-  { id: "reference/tekhniki", label: "Техники" },
-  { id: "reference/kategorii", label: "Категории" },
-  { id: "reference/prioriteti", label: "Приоритеты" },
+  { id: "/reference/apteki", label: "Аптеки" },
+  { id: "/reference/tekhniki", label: "Техники" },
+  { id: "/reference/kategorii", label: "Категории" },
+  { id: "/reference/prioriteti", label: "Приоритеты" },
 ];
 const navItems = [
-  { id: "requests", label: "Заявки" },
-  { id: "reports", label: "Отчеты" },
+  { id: "/requests", label: "Заявки" },
+  { id: "/reports", label: "Отчеты" },
 ];
 
 const collection = createListCollection({ items });
@@ -36,24 +36,99 @@ export function Header() {
   const [activePath, setActivePath] = useState("");
 
   useEffect(() => {
-    const path = window.location.pathname.slice(1);
+    const path = window.location.pathname;
     setActivePath(path);
   }, [window.location.pathname]);
-
+  const allLink = [...navItems, ...items];
+  const activeLink =
+    allLink.filter((item) => item.id === activePath)[0]?.label || "Заявки";
   return (
     <Flex
       as="nav"
       align="center"
       justify="space-between"
-      pr="34px"
-      pl="130px"
-      pt="22px"
-      pb="24px"
+      p={{ base: "16px" }}
+      pr={{ md: "34px" }}
+      pl={{ md: "130px" }}
+      pt={{ md: "22px" }}
+      pb={{ md: "24px" }}
       bg="white"
       borderBottom="1px solid"
       borderBottomColor="rgba(217, 225, 236, 1)"
     >
+      <SelectRoot
+        collection={collection}
+        display={{ base: "flex", md: "none" }}
+        width="100%"
+        flexDirection="column"
+        position="relative"
+      >
+        <SelectTrigger
+          border="none"
+          borderWidth="0"
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-start"
+          gap="5px"
+          padding={0}
+          zIndex="1"
+          _hover={{
+            textDecoration: "none",
+
+            transform: "translateY(-5px)",
+            transition: "all 0.2s ease-in-out",
+          }}
+          _active={{
+            transform: "translateY(0px)",
+          }}
+        >
+          <Text
+            fontFamily="Inter"
+            fontSize="20px"
+            color="black"
+            fontWeight={600}
+          >
+            {activeLink}
+          </Text>
+          <GoTriangleDown color="black" size="24px" />
+        </SelectTrigger>
+
+        <SelectContent
+          width="100%"
+          position="absolute"
+          top="100%"
+          left="0"
+          mt="1"
+        >
+          {allLink.map((item) => (
+            <SelectItem key={item.id} item={item.label} justifyContent="center">
+              <Link
+                key={item.id}
+                href={item.id}
+                textDecoration="none"
+                fontWeight={400}
+                border="0"
+                outline="none"
+                _hover={{
+                  textDecoration: "none",
+
+                  transform: "translateY(-5px)",
+
+                  transition: "all 0.2s ease-in-out",
+                }}
+                _active={{
+                  transform: "translateY(0px)",
+                }}
+              >
+                {item.label}
+              </Link>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
+
       <Stack
+        display={{ base: "none", md: "flex" }}
         direction="row"
         gap="35px"
         fontFamily="Inter"
@@ -172,7 +247,7 @@ export function Header() {
         <Button
           bgColor="inherit"
           variant="outline"
-          display="flex"
+          display={{ base: "none", md: "flex" }}
           gap="4px"
           padding="11px 21px 11px 24px"
           bg="rgba(241, 241, 241, 1)"
@@ -201,3 +276,132 @@ export function Header() {
     </Flex>
   );
 }
+
+//   return (
+//     <Box as="header" borderBottomWidth="1px" borderColor="gray.200" bg="white">
+//       <Flex
+//         maxW="1600px"
+//         mx="auto"
+//         px="6"
+//         h="64px"
+//         align="center"
+//         justify="space-between"
+//       >
+//         <Flex align="center" gap="8">
+//           {navItems.map((item) => (
+//             <Text
+//               key={item.id}
+//               fontWeight={activeTab === item.id ? "semibold" : "normal"}
+//               color={activeTab === item.id ? "gray.900" : "gray.500"}
+//               cursor="pointer"
+//               onClick={() => onTabChange(item.id)}
+//               _hover={{ color: "gray.700" }}
+//               fontSize="sm"
+//             >
+//               {item.label}
+//             </Text>
+//           ))}
+
+//           <Box position="relative">
+//             <Button
+//               variant="ghost"
+//               fontWeight="normal"
+//               color="gray.500"
+//               fontSize="sm"
+//               _hover={{ color: "gray.700", bg: "transparent" }}
+//               onClick={() => setMenuOpen(!menuOpen)}
+//             >
+//               Справочники
+//               <Box as="span" ml="1">
+//                 <FiChevronDown />
+//               </Box>
+//             </Button>
+//             {menuOpen && (
+//               <Box
+//                 position="absolute"
+//                 top="100%"
+//                 left="0"
+//                 bg="white"
+//                 borderWidth="1px"
+//                 borderColor="gray.200"
+//                 borderRadius="md"
+//                 shadow="lg"
+//                 py="1"
+//                 minW="150px"
+//                 zIndex="dropdown"
+//               >
+//                 <Box
+//                   px="4"
+//                   py="2"
+//                   fontSize="sm"
+//                   cursor="pointer"
+//                   _hover={{ bg: "gray.50" }}
+//                   onClick={() => setMenuOpen(false)}
+//                 >
+//                   Пользователи
+//                 </Box>
+//                 <Box
+//                   px="4"
+//                   py="2"
+//                   fontSize="sm"
+//                   cursor="pointer"
+//                   _hover={{ bg: "gray.50" }}
+//                   onClick={() => setMenuOpen(false)}
+//                 >
+//                   Аптеки
+//                 </Box>
+//               </Box>
+//             )}
+//           </Box>
+//         </Flex>
+
+//         <Flex align="center" gap="4">
+//           <Box position="relative">
+//             <Box
+//               w="32px"
+//               h="32px"
+//               borderRadius="full"
+//               bg="orange.100"
+//               display="flex"
+//               alignItems="center"
+//               justifyContent="center"
+//               fontSize="xs"
+//               fontWeight="medium"
+//               color="orange.700"
+//             >
+//               АИ
+//             </Box>
+//             <Badge
+//               position="absolute"
+//               top="-2px"
+//               right="-2px"
+//               bg="green.500"
+//               color="white"
+//               borderRadius="full"
+//               fontSize="xs"
+//               minW="18px"
+//               h="18px"
+//               display="flex"
+//               alignItems="center"
+//               justifyContent="center"
+//             >
+//               2
+//             </Badge>
+//           </Box>
+
+//           <Button
+//             variant="outline"
+//             size="sm"
+//             borderColor="gray.300"
+//             color="gray.700"
+//             fontWeight="normal"
+//             _hover={{ bg: "gray.50" }}
+//           >
+//             <FiLogOut />
+//             <Text ml="2">Выйти</Text>
+//           </Button>
+//         </Flex>
+//       </Flex>
+//     </Box>
+//   );
+// }

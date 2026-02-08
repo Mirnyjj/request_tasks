@@ -1,88 +1,44 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import {
   Box,
   Flex,
-  Text,
   Button,
-  Textarea,
-  Badge,
-  createListCollection,
   Dialog,
   Portal,
   Field,
-  Select,
-  Checkbox,
   Input,
-  Grid,
-  List,
+  Text,
+  Badge,
 } from "@chakra-ui/react";
 
 import type {
   FormErrors,
   NewRequestFormData,
   NewRequestModalProps,
-  Priority,
 } from "../../lib/types";
-import { categories, pharmacies } from "../../lib/mockData";
 
-import {
-  HiOutlineChevronDoubleUp,
-  HiOutlineChevronDown,
-  HiOutlineChevronUp,
-} from "react-icons/hi";
-import { PiDiamond } from "react-icons/pi";
-import { UploadFile } from "./UploadFile";
+import { UploadFileDesktop } from "./UploadFileDesktop";
 import { RiCloseLargeFill } from "react-icons/ri";
-import { IoMdWarning } from "react-icons/io";
+import { IoMdArrowBack } from "react-icons/io";
 import { validateForm } from "@/utils/validateForm";
 import { FormErrorSummary } from "./FormErrorSummary";
+import { FieldPharmacy } from "./Fields/FieldPharmacy";
+import { FieldCategory } from "./Fields/FieldCategory";
+import { FieldTopic } from "./Fields/FieldTopic";
+import { FieldPriority } from "./Fields/FieldPriority";
+import { FieldDescription } from "./Fields/FieldDescription";
+import { FieldIsWarranty } from "./Fields/FieldIsWarranty";
+import { HelpInfo } from "./HelpInfo";
+import { GoQuestion } from "react-icons/go";
+import { UploadFileMobile } from "./UploadFileMobile";
+import { FiFolder } from "react-icons/fi";
+import { HelpInfoMobile } from "./HelpInfoMobile";
 
-const priorityOptions = [
-  {
-    value: "critical",
-    label: "Критический:",
-    desc: "простой в работе, риск потери товара",
-    color: "rgba(185, 60, 60, 1)",
-    icon: <HiOutlineChevronDoubleUp size="14px" color="rgba(185, 60, 60, 1)" />,
-  },
-  {
-    value: "high",
-    label: "Высокий:",
-    desc: "требует срочного решения",
-    color: "rgba(185, 60, 60, 1)",
-    icon: <HiOutlineChevronUp size="14px" color="rgba(185, 60, 60, 1)" />,
-  },
-  {
-    value: "medium",
-    label: "Средний:",
-    desc: "влияет на эффективность, но не стопорит",
-    color: "rgba(204, 137, 42, 1)",
-    icon: <PiDiamond size="14px" color="rgba(204, 137, 42, 1)" />,
-  },
-  {
-    value: "low",
-    label: "Низкий:",
-    desc: "можно отложить",
-    color: "rgba(45, 96, 237, 1)",
-    icon: <HiOutlineChevronDown size="14px" color="rgba(45, 96, 237, 1)" />,
-  },
-];
-
-const helpNeeded = [
-  "температура в камере выше допустимой нормы (+2...+8 °C) и не восстанавливается",
-  "оборудование издаёт необычные шумы (гул, стук, вибрация)",
-  "есть ошибка на дисплее или аварийный сигнал",
-  "дверь не закрывается/сломаны уплотнители",
-  "холодильник не включается или выключается самопроизвольно",
-];
-
-const helpNotNeeded = [
-  "просто загружено много товара, и температура временно повысилась",
-  "дверь была оставлена открытой, и холодильник «догоняет» температуру",
-  "требуется только разморозка (согласно регламенту её выполняет персонал аптеки)",
-];
-
-export function NewRequestModal({ isOpen, onClose }: NewRequestModalProps) {
+export function NewRequestModal({
+  isMobile,
+  isOpen,
+  onClose,
+}: NewRequestModalProps) {
   const [formData, setFormData] = useState<NewRequestFormData>({
     pharmacyId: "",
     priority: "medium",
@@ -97,12 +53,14 @@ export function NewRequestModal({ isOpen, onClose }: NewRequestModalProps) {
   >([]);
   const [submitStep, setSubmitStep] = useState<"form" | "confirm">("form");
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isShowFiles, setShowFiles] = useState(false);
+  const [isShowHelpInfo, setShowHelpInfo] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [successMessage, setSuccessMessage] = useState("");
-  const selectedPharmacy = pharmacies.find((p) => p.id === formData.pharmacyId);
-  const selectedPriority = priorityOptions.find(
-    (p) => p.value === formData.priority
-  );
+
+  const validationForm = useMemo(() => {
+    return Object.keys(validateForm(formData)).length === 0;
+  }, [formData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,33 +107,6 @@ export function NewRequestModal({ isOpen, onClose }: NewRequestModalProps) {
     }));
   };
 
-  const pharmacyCollection = createListCollection({
-    items: [
-      { value: "", label: "Выберите аптеку от которой исходит заявка" },
-      ...pharmacies.map((p) => ({
-        value: p.id,
-        label: `${p.id} - ${p.name}`,
-      })),
-    ],
-  });
-
-  const categoryCollection = createListCollection({
-    items: [
-      { value: "", label: "Холодильники, кондиционеры или другое" },
-      ...categories.map((cat) => ({
-        value: cat,
-        label: cat,
-      })),
-    ],
-  });
-
-  const priorityCollection = createListCollection({
-    items: priorityOptions.map((p) => ({
-      value: p.value,
-      label: `${p.label} ${p.desc}`,
-    })),
-  });
-
   const resetForm = () => {
     setFormData({
       pharmacyId: "",
@@ -187,6 +118,10 @@ export function NewRequestModal({ isOpen, onClose }: NewRequestModalProps) {
       files: [],
     });
     setFilePreview([]);
+    setSubmitStep("form");
+    setErrors({});
+    setShowFiles(false);
+    setShowHelpInfo(false);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,466 +155,232 @@ export function NewRequestModal({ isOpen, onClose }: NewRequestModalProps) {
     setFilePreview((prev) => prev.filter((_, i) => i !== index));
   };
 
-  console.log(formData, "form");
   return (
     <Dialog.Root
       open={isOpen}
       onOpenChange={() => onClose()}
       placement="center"
+      size={{ base: isMobile ? "full" : "md" }}
       motionPreset="slide-in-bottom"
     >
       <Portal>
         <Dialog.Backdrop bg="blackAlpha.500" />
 
-        <Dialog.Positioner p="4">
+        <Dialog.Positioner p={{ base: 0, md: "4" }}>
           <Dialog.Content
             w="100%"
             maxW="1010px"
             maxH="85vh"
             minW="320px"
             mx="auto"
-            borderRadius="xl"
+            borderRadius={{ base: 0, md: "xl" }}
           >
-            <Dialog.Header
-              position="relative"
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Dialog.Title fontSize="2xl" fontWeight="semibold">
-                Создание заявки
-              </Dialog.Title>
-
-              <Dialog.CloseTrigger asChild>
-                <Box
-                  position="absolute"
-                  right="8"
-                  top="50%"
-                  transform="translateY(-50%)"
+            {!isShowHelpInfo ? (
+              <HelpInfoMobile setShowHelpInfo={setShowHelpInfo} />
+            ) : !isShowFiles ? (
+              <>
+                <Dialog.Header
+                  display="flex"
+                  justifyContent={{ base: "flex-start", md: "space-between" }}
+                  alignItems="center"
+                  border={{ base: "1px solid #DDDDDD", md: "none" }}
                 >
-                  <RiCloseLargeFill size={24} color="#B0B0B0" />
-                </Box>
-              </Dialog.CloseTrigger>
-            </Dialog.Header>
+                  {isMobile && (
+                    <Dialog.CloseTrigger asChild position="relative" top="0">
+                      <IoMdArrowBack size={30} color="black" />
+                    </Dialog.CloseTrigger>
+                  )}
+                  <Dialog.Title fontSize="2xl" fontWeight="semibold">
+                    Создание заявки
+                  </Dialog.Title>
 
-            <Dialog.Body px="8" pb="8" overflowY="auto">
-              {successMessage && (
-                <Box
-                  mb="4"
-                  p="3"
-                  borderRadius="8px"
-                  bg="green.100"
-                  color="green.800"
-                  fontWeight="500"
-                  textAlign="center"
+                  {!isMobile && (
+                    <Dialog.CloseTrigger asChild position="relative" top="0">
+                      <RiCloseLargeFill size={24} color="#B0B0B0" />
+                    </Dialog.CloseTrigger>
+                  )}
+                </Dialog.Header>
+
+                <Dialog.Body
+                  px="8"
+                  pb="8"
+                  overflowY="auto"
+                  display="flex"
+                  flexDirection="column"
+                  flex={1}
                 >
-                  {successMessage}
-                </Box>
-              )}
-              <form onSubmit={handleSubmit}>
-                <Flex gap="6" flexWrap={{ base: "wrap", md: "nowrap" }}>
-                  <Box flex="1" minW={{ base: "0", md: "48%" }}>
-                    <Field.Root pb="48px">
-                      <Field.Label
-                        fontWeight={400}
-                        color="#1C1C1C"
-                        fontSize="12px"
-                      >
-                        Аптека
-                      </Field.Label>
-
-                      {selectedPharmacy ? (
-                        <Flex
-                          align="center"
-                          borderWidth="1px"
-                          borderColor="gray.300"
-                          px="3"
-                          w="100%"
-                          justifyContent="space-between"
-                          alignItems="center"
-                          borderRadius={8}
-                          h="5vh"
-                          // h="48px"
-                        >
-                          <Badge mr="2" fontWeight={500}>
-                            {selectedPharmacy.id}
-                          </Badge>
-                          {(() => {
-                            const [first, ...rest] =
-                              selectedPharmacy.name.split(" ");
-                            return (
-                              <Flex
-                                flex="1"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                              >
-                                <Text fontSize="sm">
-                                  <Text as="span" fontWeight={500}>
-                                    {first}
-                                  </Text>{" "}
-                                  <Text as="span">{rest.join(" ")}</Text>
-                                </Text>
-                              </Flex>
-                            );
-                          })()}
-
-                          <Button
-                            variant="outline"
-                            py="6px"
-                            px="4px"
-                            size="xs"
-                            borderRadius={8}
-                            letterSpacing={0}
-                            fontSize="12px"
-                            h="auto"
-                            onClick={() =>
-                              setFormData({
-                                ...formData,
-                                pharmacyId: "",
-                              })
-                            }
-                          >
-                            Изменить
-                          </Button>
-                        </Flex>
-                      ) : (
-                        <Select.Root
-                          collection={pharmacyCollection}
-                          value={
-                            formData.pharmacyId ? [formData.pharmacyId] : []
-                          }
-                          onValueChange={(details) =>
-                            handleChange("pharmacyId", details.value[0])
-                          }
-                        >
-                          <Select.Trigger
-                            h="5vh"
-                            borderRadius={8}
-                            children={
-                              <Flex
-                                w="100%"
-                                justifyContent="space-between"
-                                alignItems="center"
-                              >
-                                <Text color="#B0B0B0">
-                                  Выберите аптеку от которой исходит заявка
-                                </Text>
-                                <HiOutlineChevronDown size={24} />
-                              </Flex>
-                            }
+                  {successMessage && (
+                    <Box
+                      mb="4"
+                      p="3"
+                      borderRadius="8px"
+                      bg="green.100"
+                      color="green.800"
+                      fontWeight="500"
+                      textAlign="center"
+                    >
+                      {successMessage}
+                    </Box>
+                  )}
+                  <form onSubmit={handleSubmit}>
+                    <Flex gap="6" flexWrap={{ base: "wrap", md: "nowrap" }}>
+                      <Box flex="1" minW={{ base: "100%", md: "48%" }}>
+                        <FieldPharmacy
+                          setFormData={setFormData}
+                          handleChange={handleChange}
+                          formData={formData}
+                        />
+                        <FieldCategory
+                          handleChange={handleChange}
+                          formData={formData}
+                        />
+                        <Flex justifyContent="space-between">
+                          <FieldIsWarranty
+                            handleChange={handleChange}
+                            formData={formData}
                           />
 
-                          <Select.Content position="absolute" w="100%">
-                            {pharmacies.map((p) => (
-                              <Select.Item key={p.id} item={p.id}>
-                                {p.id} — {p.name}
-                              </Select.Item>
-                            ))}
-                          </Select.Content>
-                        </Select.Root>
-                      )}
-                    </Field.Root>
-
-                    {/* Категория */}
-                    <Field.Root pb="16px">
-                      <Field.Label
-                        fontWeight={400}
-                        color="#1C1C1C"
-                        fontSize="12px"
-                      >
-                        Категория заявки
-                      </Field.Label>
-
-                      <Select.Root
-                        collection={categoryCollection}
-                        value={formData.category ? [formData.category] : []}
-                        onValueChange={(details) =>
-                          handleChange("category", details.value[0])
-                        }
-                      >
-                        <Select.Trigger
-                          h="5vh"
-                          borderRadius={8}
-                          children={
-                            <Flex
-                              w="100%"
-                              justifyContent="space-between"
+                          {validationForm && (
+                            <Button
+                              display={{ base: "flex", md: "none" }}
+                              gap="5px"
+                              bg="inherit"
+                              p={0}
+                              justifyContent="center"
                               alignItems="center"
+                              onClick={() => setShowHelpInfo((e) => !e)}
                             >
-                              <Text
-                                color={!formData.category ? "#B0B0B0" : "black"}
-                              >
-                                {formData.category
-                                  ? formData.category
-                                  : "Холодильники, кондиционеры или другое"}
-                              </Text>
-                              <HiOutlineChevronDown size={24} />
-                            </Flex>
-                          }
+                              <GoQuestion size="14px" color="#440AF1" />
+                              <Text color="#440AF1">Проверь себя</Text>
+                            </Button>
+                          )}
+                        </Flex>
+                        {!isMobile && submitStep === "confirm" && <HelpInfo />}
+                        {!isMobile && <FormErrorSummary errors={errors} />}
+                      </Box>
+
+                      {/* Правая колонка */}
+                      <Box flex="1" minW={{ base: "0", md: "48%" }}>
+                        <FieldTopic
+                          handleChange={handleChange}
+                          formData={formData}
                         />
-                        <Select.Content position="absolute" w="100%">
-                          {categories.map((cat) => (
-                            <Select.Item key={cat} item={cat}>
-                              {cat}
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select.Root>
-                    </Field.Root>
 
-                    {/* Гарантия */}
+                        <FieldPriority
+                          handleChange={handleChange}
+                          formData={formData}
+                        />
 
-                    <Checkbox.Root
-                      mb="16px"
-                      checked={formData.isWarranty}
-                      onCheckedChange={(e) =>
-                        handleChange("isWarranty", !!e.checked)
-                      }
-                    >
-                      <Checkbox.HiddenInput />
-                      <Checkbox.Control borderRadius={5} />
-                      <Checkbox.Label fontWeight={400}>
-                        Гарантийный случай?
-                      </Checkbox.Label>
-                    </Checkbox.Root>
-                    {submitStep === "confirm" && (
-                      <Grid templateColumns="1fr 1fr" gap="12px">
-                        <Box
-                          bg="#FFFAD4"
-                          p="10px"
-                          borderRadius="10px"
-                          h="fit-content"
-                          minH="0"
+                        <FieldDescription
+                          handleChange={handleChange}
+                          formData={formData}
+                        />
+                        {isMobile && <FormErrorSummary errors={errors} />}
+
+                        {/* Файлы */}
+                        <Field.Root display={{ base: "none", md: "block" }}>
+                          <Field.Label
+                            fontWeight={400}
+                            color="#1C1C1C"
+                            fontSize="12px"
+                            pb={1}
+                          >
+                            Прикрепите файлы
+                          </Field.Label>
+                          <UploadFileDesktop
+                            fileInputRef={fileInputRef}
+                            filePreview={filePreview}
+                            removeFile={removeFile}
+                          />
+                        </Field.Root>
+                      </Box>
+                    </Flex>
+                    <Input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      accept="image/*,.pdf"
+                      onChange={handleFileUpload}
+                      display="none"
+                    />
+                    {/* Кнопки */}
+                    {!isMobile && (
+                      <Flex gap="3" mt="8" fontWeight={400} fontSize="16px">
+                        <Button
+                          type="submit"
+                          color="white"
+                          px="6"
+                          borderRadius="5px"
+                          _hover={{ bg: "#329a38" }}
                         >
-                          <Flex align="center" gap="2" mb="2">
-                            <IoMdWarning />
-                            <Text fontWeight="400" fontSize="10px">
-                              Заявка нужна, если:
-                            </Text>
-                          </Flex>
-                          <List.Root pl="20px" fontWeight="400" fontSize="10px">
-                            {helpNeeded.map((item, i) => (
-                              <List.Item
-                                _marker={{
-                                  color: "black",
-                                  fontSize: "12px",
-                                  marginInlineEnd: "4px",
-                                }}
-                                lineHeight="10px"
-                                key={i}
-                                textIndent="-4px"
-                              >
-                                {item}
-                              </List.Item>
-                            ))}
-                          </List.Root>
-                        </Box>
-
-                        <Box
-                          bg="#FFEAEA"
-                          p="10px"
-                          borderRadius="10px"
-                          h="fit-content"
-                          minH="0"
+                          Создать заявку
+                        </Button>
+                        <Button
+                          variant="outline"
+                          borderColor="black"
+                          px="6"
+                          borderRadius="5px"
+                          onClick={() => {
+                            resetForm();
+                            onClose();
+                          }}
+                          _hover={{ bg: "red.300" }}
+                          bg="transparent"
                         >
-                          <Flex align="center" gap="2" mb="2">
-                            <RiCloseLargeFill size={12} color="red" />
-                            <Text fontWeight="400" fontSize="10px">
-                              Заявку создавать не нужно, если:
-                            </Text>
-                          </Flex>
-                          <List.Root pl="20px" fontWeight="400" fontSize="10px">
-                            {helpNotNeeded.map((item, i) => (
-                              <List.Item
-                                key={i}
-                                _marker={{
-                                  color: "black",
-                                  fontSize: "12px",
-                                  marginInlineEnd: "4px",
-                                }}
-                                lineHeight="10px"
-                                textIndent="-4px"
-                              >
-                                {item}
-                              </List.Item>
-                            ))}
-                          </List.Root>
-                        </Box>
-                      </Grid>
+                          Отмена
+                        </Button>
+                      </Flex>
                     )}
-                    <FormErrorSummary errors={errors} />
-                  </Box>
-
-                  {/* Правая колонка */}
-                  <Box flex="1" minW={{ base: "0", md: "48%" }}>
-                    {/* Тема */}
-                    <Field.Root mb="24px">
-                      <Field.Label
-                        fontWeight={400}
-                        color="#1C1C1C"
-                        fontSize="12px"
+                  </form>
+                  {isMobile && (
+                    <Flex flexDirection="column" gap="2px" mt="auto">
+                      <Button
+                        w="100%"
+                        bg="gray.100"
+                        color="gray.700"
+                        fontWeight="normal"
+                        borderRadius="4px"
+                        mb="3"
+                        onClick={() => setShowFiles(true)}
                       >
-                        Тема заявки
-                      </Field.Label>
-                      <Textarea
-                        placeholder="Дайте заявке краткое название: например, сломался холодильник или не работает кондиционер"
-                        borderRadius={8}
-                        minHeight="7.6vh"
-                        value={formData.topic}
-                        onChange={(e) => handleChange("topic", e.target.value)}
-                        rows={3}
-                      />
-                    </Field.Root>
-
-                    {/* Приоритет */}
-                    <Field.Root mb="24px">
-                      <Field.Label
-                        fontWeight={400}
-                        color="#1C1C1C"
-                        fontSize="12px"
+                        <FiFolder />
+                        <Text color="black" ml="2">
+                          Прикрепленные файлы
+                        </Text>
+                        {formData.files.length > 0 && (
+                          <Badge
+                            ml="2"
+                            bg="white"
+                            color="black"
+                            borderRadius="full"
+                          >
+                            {formData.files.length}
+                          </Badge>
+                        )}
+                      </Button>
+                      <Button
+                        type="submit"
+                        w="100%"
+                        color="white"
+                        fontWeight="normal"
+                        borderRadius="4px"
+                        onClick={handleSubmit}
                       >
-                        Приоритет
-                      </Field.Label>
-
-                      <Select.Root
-                        collection={priorityCollection}
-                        value={formData.priority ? [formData.priority] : []}
-                        onValueChange={(details) =>
-                          handleChange("priority", details.value[0] as Priority)
-                        }
-                      >
-                        <Select.Trigger
-                          h="5vh"
-                          borderRadius={8}
-                          children={
-                            <Flex
-                              w="100%"
-                              justifyContent="space-between"
-                              alignItems="center"
-                            >
-                              <Flex
-                                flexWrap="nowrap"
-                                alignItems="center"
-                                gap={2}
-                                fontSize="12px"
-                              >
-                                {selectedPriority?.icon}
-                                <Text fontWeight={500}>
-                                  {selectedPriority?.label}
-                                </Text>
-                                <Text color="#B0B0B0">
-                                  {selectedPriority?.desc}
-                                </Text>
-                              </Flex>
-                              <HiOutlineChevronDown size={24} />
-                            </Flex>
-                          }
-                        />
-                        <Select.Content position="absolute" w="100%">
-                          {priorityOptions.map((p) => (
-                            <Select.Item
-                              key={p.value}
-                              item={p.value}
-                              display="flex"
-                              w="100%"
-                              flexWrap="nowrap"
-                              justifyContent="start"
-                              alignItems="center"
-                            >
-                              {p.icon}
-                              <Text>{p.label}</Text>
-                              <Text color="#B0B0B0">{p.desc}</Text>
-                            </Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select.Root>
-                    </Field.Root>
-
-                    {/* Описание */}
-                    <Field.Root mb="24px">
-                      <Field.Label
-                        fontWeight={400}
-                        color="#1C1C1C"
-                        fontSize="12px"
-                      >
-                        Описание проблемы
-                      </Field.Label>
-                      <Textarea
-                        _placeholder={{
-                          paddingLeft: 0,
-                          marginLeft: 0,
-                          textAlign: "left",
-                          whiteSpace: "pre-line",
-                          lineHeight: 1.4,
-                        }}
-                        placeholder="Кратко опишите проблему:
-
-                ・ что случилось?
-                ・ дата и время произошедшего?
-                ・ сколько длится проблема?
-                ・ насколько она влияет на вашу работу?"
-                        borderRadius={8}
-                        value={formData.description}
-                        onChange={(e) =>
-                          handleChange("description", e.target.value)
-                        }
-                        rows={8}
-                      />
-                    </Field.Root>
-
-                    {/* Файлы */}
-                    <Field.Root>
-                      <Field.Label
-                        fontWeight={400}
-                        color="#1C1C1C"
-                        fontSize="12px"
-                      >
-                        Прикрепите файлы
-                      </Field.Label>
-                      <UploadFile
-                        fileInputRef={fileInputRef}
-                        filePreview={filePreview}
-                        removeFile={removeFile}
-                      />
-                    </Field.Root>
-                  </Box>
-                </Flex>
-                <Input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept="image/*,.pdf"
-                  onChange={handleFileUpload}
-                  display="none"
-                />
-                {/* Кнопки */}
-                <Flex gap="3" mt="8" fontWeight={400} fontSize="16px">
-                  <Button
-                    type="submit"
-                    color="white"
-                    px="6"
-                    borderRadius="5px"
-                    _hover={{ bg: "#329a38" }}
-                  >
-                    Создать заявку
-                  </Button>
-                  <Button
-                    variant="outline"
-                    borderColor="black"
-                    px="6"
-                    borderRadius="5px"
-                    onClick={() => {
-                      onClose();
-                      resetForm();
-                    }}
-                    _hover={{ bg: "red.300" }}
-                    bg="transparent"
-                  >
-                    Отмена
-                  </Button>
-                </Flex>
-              </form>
-            </Dialog.Body>
+                        Создать заявку
+                      </Button>
+                    </Flex>
+                  )}
+                </Dialog.Body>
+              </>
+            ) : (
+              <UploadFileMobile
+                setShowFiles={setShowFiles}
+                filePreview={filePreview}
+                removeFile={removeFile}
+                fileInputRef={fileInputRef}
+                handleFileUpload={handleFileUpload}
+              />
+            )}
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

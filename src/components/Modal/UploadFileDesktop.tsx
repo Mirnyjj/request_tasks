@@ -13,7 +13,7 @@ type PropsFileUpload = {
   removeFile: (index: number) => void;
 };
 
-export const UploadFile = ({
+export const UploadFileDesktop = ({
   filePreview,
   fileInputRef,
   removeFile,

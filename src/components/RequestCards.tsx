@@ -1,73 +1,13 @@
 import { Box, Text, Badge, Flex } from "@chakra-ui/react";
-import { FiCheckCircle } from "react-icons/fi";
-import { BsDiamondFill, BsChevronUp, BsChevronDoubleUp } from "react-icons/bs";
 
-import type { Priority, Request, Status } from "../lib/types";
+import type { Request } from "@/lib/types";
+import { renderSLACell } from "./RequestsTable/RenderSLACell";
+import PriorityBadge from "./RequestsTable/PriorityBadge";
+import StatusBadge from "./RequestsTable/StatusBadge";
+import { groupByDate } from "@/utils/groupByDate";
 
 interface RequestCardsProps {
   requests: Request[];
-}
-
-function PriorityIcon({ priority }: { priority: Priority }) {
-  const config = {
-    critical: { icon: "doubleUp", color: "red.500" },
-    high: { icon: "up", color: "orange.500" },
-    medium: { icon: "diamond", color: "orange.400" },
-    low: { icon: "diamond", color: "gray.400" },
-  };
-  const { icon, color } = config[priority];
-  return (
-    <Box color={color}>
-      {icon === "doubleUp" && <BsChevronDoubleUp size={16} />}
-      {icon === "up" && <BsChevronUp size={16} />}
-      {icon === "diamond" && <BsDiamondFill size={16} />}
-    </Box>
-  );
-}
-
-function StatusBadge({ status }: { status: Status }) {
-  const config: Record<Status, { bg: string; color: string; label: string }> = {
-    new: { bg: "red.50", color: "red.600", label: "Новая" },
-    "in-progress": { bg: "yellow.100", color: "yellow.800", label: "В работе" },
-    ready: { bg: "green.100", color: "green.700", label: "Готово" },
-    closed: { bg: "gray.100", color: "gray.700", label: "Закрыто" },
-    rejected: { bg: "red.100", color: "red.700", label: "Отклонено" },
-    pending: { bg: "gray.100", color: "gray.700", label: "На паузе" },
-    "waiting-parts": {
-      bg: "orange.50",
-      color: "orange.700",
-      label: "Ожидает запчасти",
-    },
-  };
-  const { bg, color, label } = config[status];
-  return (
-    <Badge
-      bg={bg}
-      color={color}
-      px="3"
-      py="1"
-      borderRadius="md"
-      fontWeight="medium"
-      fontSize="xs"
-    >
-      {label}
-    </Badge>
-  );
-}
-
-function groupByDate(requests: Request[]) {
-  const groups: { label: string; requests: Request[] }[] = [
-    { label: "СЕГОДНЯ", requests: [] },
-    { label: "ВЧЕРА", requests: [] },
-    { label: "В АВГУСТЕ 2025", requests: [] },
-  ];
-
-  for (let i = 0; i < requests.length; i++) {
-    const groupIndex = i % 3;
-    groups[groupIndex].requests.push(requests[i]);
-  }
-
-  return groups.filter((g) => g.requests.length > 0);
 }
 
 export function RequestCards({ requests }: RequestCardsProps) {
@@ -79,7 +19,7 @@ export function RequestCards({ requests }: RequestCardsProps) {
         direction="column"
         align="center"
         justify="center"
-        py="16"
+        p="17px"
         color="gray.500"
       >
         <Text fontSize="lg" fontWeight="medium">
@@ -91,7 +31,7 @@ export function RequestCards({ requests }: RequestCardsProps) {
   }
 
   return (
-    <Box display="flex" flexDirection="column" gap="4" pb="140px">
+    <Box display="flex" flexDirection="column" gap="4" pb="140px" px="17px">
       {groups.map((group) => (
         <Box key={group.label}>
           <Text
@@ -104,13 +44,13 @@ export function RequestCards({ requests }: RequestCardsProps) {
             {group.label}
           </Text>
           <Box display="flex" flexDirection="column" gap="3">
-            {group.requests.map((request) => (
+            {group.requests.map((request, ind) => (
               <Box
-                key={request.id}
+                key={ind}
                 bg="white"
                 borderWidth="1px"
                 borderColor="gray.200"
-                borderRadius="xl"
+                borderRadius="8px"
                 p="4"
                 cursor="pointer"
                 _hover={{ borderColor: "gray.300" }}
@@ -120,7 +60,7 @@ export function RequestCards({ requests }: RequestCardsProps) {
                     {request.topic}
                   </Text>
                   <Flex align="center" gap="2">
-                    <PriorityIcon priority={request.priority} />
+                    <PriorityBadge priority={request.priority} />
                     <StatusBadge status={request.status} />
                   </Flex>
                 </Flex>
@@ -141,14 +81,14 @@ export function RequestCards({ requests }: RequestCardsProps) {
                       {request.pharmacyAddress}
                     </Text>
                   </Flex>
-                  {request.resolutionTime && (
-                    <Flex align="center" gap="1" color="green.500">
-                      <FiCheckCircle size={16} />
-                      <Text fontSize="sm" fontWeight="medium">
-                        {request.resolutionTime}
-                      </Text>
-                    </Flex>
-                  )}
+                  {request.resolutionTime &&
+                    renderSLACell({
+                      createdAt: request.createdAt,
+                      stageTime: request.resolutionTime,
+                      priority: request.priority,
+                      stage: "resolution",
+                      status: request.status,
+                    })}
                 </Flex>
               </Box>
             ))}
