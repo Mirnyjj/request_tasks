@@ -4,6 +4,7 @@ import { Checkbox } from "@chakra-ui/react";
 export const FieldIsWarranty = ({ formData, handleChange }: FieldFormProps) => {
   return (
     <Checkbox.Root
+      id="isWarranty"
       mb={{ base: 0, md: "16px" }}
       checked={formData.isWarranty}
       onCheckedChange={(e) => handleChange("isWarranty", !!e.checked)}

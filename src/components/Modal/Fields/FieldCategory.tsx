@@ -21,7 +21,12 @@ export const FieldCategory = ({ handleChange, formData }: FieldFormProps) => {
   });
   return (
     <Field.Root pb="16px">
-      <Field.Label fontWeight={400} color="#1C1C1C" fontSize="12px">
+      <Field.Label
+        fontWeight={400}
+        color="#1C1C1C"
+        fontSize="12px"
+        htmlFor="category"
+      >
         Категория заявки
       </Field.Label>
 
@@ -31,6 +36,7 @@ export const FieldCategory = ({ handleChange, formData }: FieldFormProps) => {
         onValueChange={(details) => handleChange("category", details.value[0])}
       >
         <Select.Trigger
+          id="category"
           h="5vh"
           borderRadius={8}
           children={

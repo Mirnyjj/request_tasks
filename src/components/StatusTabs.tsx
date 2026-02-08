@@ -1,4 +1,4 @@
-import { Box, Tabs, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Tabs, useBreakpointValue } from "@chakra-ui/react";
 
 import type { Status } from "../lib/types";
 import { statusTabs } from "../lib/mockData";
@@ -8,12 +8,14 @@ interface StatusTabsProps {
   onStatusChange: (status: Status | "all") => void;
   showOnlyMine: boolean;
   onShowOnlyMineChange: (value: boolean) => void;
+  activeStatus: Status | "all";
 }
 
 export function StatusTabs({
   onStatusChange,
   showOnlyMine,
   onShowOnlyMineChange,
+  activeStatus,
 }: StatusTabsProps) {
   const tabsForRender = useBreakpointValue({
     base: (() => {
@@ -23,8 +25,10 @@ export function StatusTabs({
     })(),
     md: statusTabs,
   });
+  console.log(tabsForRender, "tabsForRender");
   return (
     <Tabs.Root
+      value={activeStatus === "all" ? undefined : activeStatus}
       variant="enclosed"
       display="flex"
       flexWrap="nowrap"
@@ -38,17 +42,21 @@ export function StatusTabs({
       fontSize={{ base: "14px", md: "16px" }}
       scrollbar="visible"
     >
-      <Box
+      <Button
         px="12px"
         py="4px"
-        bg="#F1F1F1"
+        bg={activeStatus === "all" ? "#F1F1F1" : "black"}
         display={{ base: "flex", md: "none" }}
         borderRadius="sm"
         justifyContent="center"
         alignItems="center"
+        onClick={() => onStatusChange("all")}
       >
-        <MdOutlineFilterAlt size="16px" color="black" />
-      </Box>
+        <MdOutlineFilterAlt
+          size="16px"
+          color={activeStatus === "all" ? "black" : "white"}
+        />
+      </Button>
       <Tabs.List
         display="inline-flex"
         gap="10px"
@@ -73,6 +81,12 @@ export function StatusTabs({
                 color: "white",
                 borderColor: "black",
               }}
+              _hover={{
+                transform: "scale(1.05)",
+                color: "white",
+                bg: "green.400",
+                transition: "all 0.3s ease",
+              }}
               onClick={() => onStatusChange(tab.value)}
             >
               {tab.label}
@@ -90,6 +104,12 @@ export function StatusTabs({
             bg: "black",
             color: "white",
             borderColor: "black",
+          }}
+          _hover={{
+            transform: "scale(1.05)",
+            color: "white",
+            bg: "green.400",
+            transition: "all 0.3s ease",
           }}
           onClick={() => onShowOnlyMineChange(!showOnlyMine)}
         >

@@ -23,6 +23,7 @@ export function SearchBar({
     >
       <InputGroup startElement={<CiSearch size="24px" color="#B0B0B0" />}>
         <Input
+          id="search"
           flex={1}
           placeholder="Поиск по номеру или теме заявки"
           onChange={(e) => onSearchChange(e.target.value)}
@@ -40,6 +41,12 @@ export function SearchBar({
         border="solid 1px"
         borderColor="#D9E1EC"
         borderRadius="4px"
+        _hover={{
+          transform: "scale(1.05)",
+          bg: "green.400",
+          transition: "all 0.3s ease",
+        }}
+        _active={{ transform: "scale(0.98)" }}
       >
         <MdPictureAsPdf color="grey" size="15px" /> Экспорт
       </Button>
@@ -50,6 +57,13 @@ export function SearchBar({
         gap="5px"
         borderRadius="4px"
         onClick={onCreateNew}
+        _hover={{
+          transform: "scale(1.05)",
+          color: "white",
+          bg: "green.400",
+          transition: "all 0.3s ease",
+        }}
+        _active={{ transform: "scale(0.98)" }}
       >
         <AiOutlinePlus size="14px" />
         <Text>Создать новую заявку</Text>

@@ -72,6 +72,18 @@ export function NewRequestModal({
       if (Object.keys(validationErrors).length > 0) {
         return;
       }
+      if (isMobile) {
+        console.log("formData", formData);
+        setSuccessMessage("Ваша заявка успешно отправлена!");
+
+        resetForm();
+        setSubmitStep("form");
+
+        setTimeout(() => {
+          setSuccessMessage("");
+          onClose();
+        }, 2000);
+      }
 
       setSubmitStep("confirm");
 
@@ -121,7 +133,7 @@ export function NewRequestModal({
     setSubmitStep("form");
     setErrors({});
     setShowFiles(false);
-    setShowHelpInfo(false);
+    setShowHelpInfo(true);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -195,7 +207,12 @@ export function NewRequestModal({
                   </Dialog.Title>
 
                   {!isMobile && (
-                    <Dialog.CloseTrigger asChild position="relative" top="0">
+                    <Dialog.CloseTrigger
+                      asChild
+                      position="relative"
+                      top="0"
+                      cursor="pointer"
+                    >
                       <RiCloseLargeFill size={24} color="#B0B0B0" />
                     </Dialog.CloseTrigger>
                   )}
@@ -278,7 +295,10 @@ export function NewRequestModal({
                         {isMobile && <FormErrorSummary errors={errors} />}
 
                         {/* Файлы */}
-                        <Field.Root display={{ base: "none", md: "block" }}>
+                        <Field.Root
+                          display={{ base: "none", md: "block" }}
+                          id="file"
+                        >
                           <Field.Label
                             fontWeight={400}
                             color="#1C1C1C"
@@ -292,17 +312,19 @@ export function NewRequestModal({
                             filePreview={filePreview}
                             removeFile={removeFile}
                           />
+                          <Input
+                            id="file"
+                            ref={fileInputRef}
+                            type="file"
+                            multiple
+                            accept="image/*,.pdf"
+                            onChange={handleFileUpload}
+                            display="none"
+                          />
                         </Field.Root>
                       </Box>
                     </Flex>
-                    <Input
-                      ref={fileInputRef}
-                      type="file"
-                      multiple
-                      accept="image/*,.pdf"
-                      onChange={handleFileUpload}
-                      display="none"
-                    />
+
                     {/* Кнопки */}
                     {!isMobile && (
                       <Flex gap="3" mt="8" fontWeight={400} fontSize="16px">

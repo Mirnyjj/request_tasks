@@ -7,10 +7,16 @@ export const FieldDescription = ({
 }: FieldFormProps) => {
   return (
     <Field.Root mb="24px">
-      <Field.Label fontWeight={400} color="#1C1C1C" fontSize="12px">
+      <Field.Label
+        fontWeight={400}
+        color="#1C1C1C"
+        fontSize="12px"
+        htmlFor="description"
+      >
         Описание проблемы
       </Field.Label>
       <Textarea
+        id="description"
         _placeholder={{
           paddingLeft: 0,
           marginLeft: 0,

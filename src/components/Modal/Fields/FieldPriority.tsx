@@ -58,7 +58,12 @@ export const FieldPriority = ({ formData, handleChange }: FieldFormProps) => {
 
   return (
     <Field.Root mb="24px">
-      <Field.Label fontWeight={400} color="#1C1C1C" fontSize="12px">
+      <Field.Label
+        fontWeight={400}
+        color="#1C1C1C"
+        fontSize="12px"
+        htmlFor="priority"
+      >
         Приоритет
       </Field.Label>
 
@@ -70,6 +75,7 @@ export const FieldPriority = ({ formData, handleChange }: FieldFormProps) => {
         }
       >
         <Select.Trigger
+          id="priority"
           h="5vh"
           borderRadius={8}
           children={
