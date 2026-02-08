@@ -1,10 +1,10 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import FilterDropdown from "./FilterDropdown";
-import { useColumnHeader } from "../../../hooks/useColumnHeader";
 import { useMemo } from "react";
 import type { Request } from "../../lib/types";
 import { getLabelFilterHeaderTable } from "@/utils/getLabelFilterHeaderTable";
+import { useColumnHeader } from "@/hooks/useColumnHeader";
 
 interface ColumnHeaderProps {
   label: string;

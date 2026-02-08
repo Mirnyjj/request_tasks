@@ -3,17 +3,21 @@ import { useMemo, useState } from "react";
 import { Header } from "./components/Header";
 import { SearchBar } from "./components/SearchBar";
 import { StatusTabs } from "./components/StatusTabs";
-
+import { RequestCards } from "./components/RequestCards";
 import { RequestsTable } from "./components/RequestsTable/RequestsTable";
 import { NewRequestModal } from "./components/Modal/NewRequestModal";
 import { mockRequests } from "./lib/mockData";
 import type { Status } from "./lib/types";
+import { useIsMobile } from "./hooks/useMobile";
+import { RequestToolbarMobile } from "./components/RequestToolbarMobile";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeStatus, setActiveStatus] = useState<Status | "all">("all");
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const isMobile = useIsMobile();
 
   const filteredRequests = useMemo(() => {
     return mockRequests.filter((request) => {
@@ -43,11 +47,13 @@ export default function App() {
     >
       <Header />
 
-      <SearchBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onCreateNew={() => setIsModalOpen(true)}
-      />
+      {!isMobile && (
+        <SearchBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onCreateNew={() => setIsModalOpen(true)}
+        />
+      )}
 
       <StatusTabs
         onStatusChange={setActiveStatus}
@@ -55,13 +61,26 @@ export default function App() {
         onShowOnlyMineChange={setShowOnlyMine}
       />
 
-      <Box bg="white" w="full" px="40px">
-        <RequestsTable requests={filteredRequests} />
-      </Box>
+      {isMobile ? (
+        <RequestCards requests={filteredRequests} />
+      ) : (
+        <Box bg="white" w="full" px="40px">
+          <RequestsTable requests={filteredRequests} />
+        </Box>
+      )}
+
+      {isMobile && (
+        <RequestToolbarMobile
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onCreateNew={() => setIsModalOpen(true)}
+        />
+      )}
 
       <NewRequestModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        isMobile={isMobile}
       />
     </Box>
   );

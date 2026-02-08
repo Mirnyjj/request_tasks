@@ -1,4 +1,4 @@
-import { Box, Tabs } from "@chakra-ui/react";
+import { Box, Tabs, useBreakpointValue } from "@chakra-ui/react";
 
 import type { Status } from "../lib/types";
 import { statusTabs } from "../lib/mockData";
@@ -15,6 +15,14 @@ export function StatusTabs({
   showOnlyMine,
   onShowOnlyMineChange,
 }: StatusTabsProps) {
+  const tabsForRender = useBreakpointValue({
+    base: (() => {
+      const last = statusTabs[statusTabs.length - 1];
+      const rest = statusTabs.slice(0, statusTabs.length - 1);
+      return [last, ...rest];
+    })(),
+    md: statusTabs,
+  });
   return (
     <Tabs.Root
       variant="enclosed"
@@ -23,8 +31,8 @@ export function StatusTabs({
       gap="10px"
       px={{ md: "40px" }}
       pl={{ base: "19px" }}
-      borderBottom="1px solid #DBE5F2"
-      pb="21px"
+      borderBottom={{ base: "none", md: "1px solid #DBE5F2" }}
+      pb={{ base: 0, md: "12px" }}
       overflowX="auto"
       whiteSpace="nowrap"
       fontSize={{ base: "14px", md: "16px" }}
@@ -42,35 +50,34 @@ export function StatusTabs({
         <MdOutlineFilterAlt size="16px" color="black" />
       </Box>
       <Tabs.List
-        display="flex"
+        display="inline-flex"
         gap="10px"
         bg="white"
         p={0}
-        w="max-content"
-        minW="100%"
         flexWrap="nowrap"
         flexShrink={0}
       >
-        {statusTabs.map((tab) => (
-          <Tabs.Trigger
-            bg="#F1F1F1"
-            px={{ base: "12px", md: "17px" }}
-            py={{ base: "4px", md: "8px" }}
-            key={tab.value}
-            value={tab.value}
-            whiteSpace="nowrap"
-            flexShrink={0}
-            minW="fit-content"
-            _selected={{
-              bg: "black",
-              color: "white",
-              borderColor: "black",
-            }}
-            onClick={() => onStatusChange(tab.value)}
-          >
-            {tab.label}
-          </Tabs.Trigger>
-        ))}
+        {tabsForRender &&
+          tabsForRender.map((tab) => (
+            <Tabs.Trigger
+              bg="#F1F1F1"
+              px={{ base: "12px", md: "17px" }}
+              py={{ base: "4px", md: "8px" }}
+              key={tab.value}
+              value={tab.value}
+              whiteSpace="nowrap"
+              flexShrink={0}
+              minW="fit-content"
+              _selected={{
+                bg: "black",
+                color: "white",
+                borderColor: "black",
+              }}
+              onClick={() => onStatusChange(tab.value)}
+            >
+              {tab.label}
+            </Tabs.Trigger>
+          ))}
         <Box w="3px" bg="#D9E1EC" mx={2} flexShrink={0} />
         <Tabs.Trigger
           px={{ base: "12px", md: "17px" }}

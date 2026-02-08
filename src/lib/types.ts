@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export type Priority = "critical" | "high" | "medium" | "low";
 export type Status =
   | "new"
@@ -52,6 +54,22 @@ export type SLAColor = "green" | "red" | "gray";
 export interface NewRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isMobile?: boolean;
 }
 
 export type FormErrors = Partial<Record<keyof NewRequestFormData, string>>;
+
+export interface SearchBarProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onCreateNew: () => void;
+}
+
+export type FieldFormProps = {
+  handleChange: <K extends keyof NewRequestFormData>(
+    field: K,
+    value: NewRequestFormData[K]
+  ) => void;
+  formData: NewRequestFormData;
+  setFormData?: Dispatch<SetStateAction<NewRequestFormData>>;
+};
