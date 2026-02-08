@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import FilterDropdown from "./FilterDropdown";
 import { useMemo } from "react";
@@ -60,28 +60,32 @@ export default function ColumnHeader({
 
   return (
     <Box position="relative" zIndex={10}>
-      <Flex
-        align="center"
+      <Button
+        bg="inherit"
+        h="auto"
+        p={0}
+        color="black"
+        alignItems="center"
         gap="1"
         justifyContent="space-between"
-        cursor="pointer"
         fontWeight="400"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle();
+        }}
+        _hover={{
+          bg: "green.300",
+          boxShadow: "lg",
+          transition: "all 0.2s ease",
+        }}
       >
         {label}
 
-        <Box
-          as="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggle();
-          }}
-        >
-          <MdOutlineFilterAlt
-            size="16px"
-            color={hasFilter ? "#38A169" : "#B0B0B0"}
-          />
-        </Box>
-      </Flex>
+        <MdOutlineFilterAlt
+          size="16px"
+          color={hasFilter ? "#38A169" : "#B0B0B0"}
+        />
+      </Button>
 
       {filterKey && (
         <FilterDropdown isOpen={isOpen} onClose={close} alignRight={alignRight}>

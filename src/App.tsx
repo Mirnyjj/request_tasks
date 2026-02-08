@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Header } from "./components/Header";
 import { SearchBar } from "./components/SearchBar";
 import { StatusTabs } from "./components/StatusTabs";
-import { RequestCards } from "./components/RequestCards";
+import { RequestCardsMobile } from "./components/RequestCardsMobile";
 import { RequestsTable } from "./components/RequestsTable/RequestsTable";
 import { NewRequestModal } from "./components/Modal/NewRequestModal";
 import { mockRequests } from "./lib/mockData";
@@ -56,13 +56,14 @@ export default function App() {
       )}
 
       <StatusTabs
+        activeStatus={activeStatus}
         onStatusChange={setActiveStatus}
         showOnlyMine={showOnlyMine}
         onShowOnlyMineChange={setShowOnlyMine}
       />
 
       {isMobile ? (
-        <RequestCards requests={filteredRequests} />
+        <RequestCardsMobile requests={filteredRequests} />
       ) : (
         <Box bg="white" w="full" px="40px">
           <RequestsTable requests={filteredRequests} />

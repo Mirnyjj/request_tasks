@@ -36,6 +36,8 @@ export const RequestToolbarMobile = ({
         transition="width 0.3s ease-in-out"
       >
         <Input
+          id="search"
+          name="search"
           flex={1}
           placeholder="Поиск"
           onChange={(e) => onSearchChange(e.target.value)}

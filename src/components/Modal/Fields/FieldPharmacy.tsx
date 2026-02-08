@@ -29,7 +29,12 @@ export const FieldPharmacy = ({
   });
   return (
     <Field.Root pb={{ base: "24px", md: "48px" }}>
-      <Field.Label fontWeight={400} color="#1C1C1C" fontSize="12px">
+      <Field.Label
+        fontWeight={400}
+        color="#1C1C1C"
+        fontSize="12px"
+        htmlFor="pharmacyId"
+      >
         Аптека
       </Field.Label>
 
@@ -93,6 +98,7 @@ export const FieldPharmacy = ({
           }
         >
           <Select.Trigger
+            id="pharmacyId"
             h="5vh"
             borderRadius={8}
             children={

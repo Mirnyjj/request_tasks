@@ -10,7 +10,7 @@ interface RequestCardsProps {
   requests: Request[];
 }
 
-export function RequestCards({ requests }: RequestCardsProps) {
+export function RequestCardsMobile({ requests }: RequestCardsProps) {
   const groups = groupByDate(requests);
 
   if (requests.length === 0) {
