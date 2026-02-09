@@ -40,6 +40,7 @@ export default function App() {
     <Box
       minH="100vh"
       bg="white"
+      px={1}
       pb={{ base: 0, md: "120px" }}
       display="flex"
       flexDirection="column"
