@@ -106,7 +106,7 @@ export function NewRequestModal({
 
   const handleChange = <K extends keyof NewRequestFormData>(
     field: K,
-    value: NewRequestFormData[K]
+    value: NewRequestFormData[K],
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -182,7 +182,7 @@ export function NewRequestModal({
           <Dialog.Content
             w="100%"
             maxW="1010px"
-            maxH="85vh"
+            maxH="741px"
             minW="320px"
             mx="auto"
             borderRadius={{ base: 0, md: "xl" }}
@@ -198,7 +198,12 @@ export function NewRequestModal({
                   border={{ base: "1px solid #DDDDDD", md: "none" }}
                 >
                   {isMobile && (
-                    <Dialog.CloseTrigger asChild position="relative" top="0">
+                    <Dialog.CloseTrigger
+                      asChild
+                      position="relative"
+                      top="0"
+                      onClick={() => resetForm()}
+                    >
                       <IoMdArrowBack size={30} color="black" />
                     </Dialog.CloseTrigger>
                   )}
@@ -212,6 +217,7 @@ export function NewRequestModal({
                       position="relative"
                       top="0"
                       cursor="pointer"
+                      onClick={() => resetForm()}
                     >
                       <RiCloseLargeFill size={24} color="#B0B0B0" />
                     </Dialog.CloseTrigger>

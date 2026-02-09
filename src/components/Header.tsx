@@ -17,7 +17,6 @@ import {
 import { GoTriangleDown } from "react-icons/go";
 import { PiSignOutBold } from "react-icons/pi";
 import ImageAva from "../assets/аааа.png";
-import { useEffect, useState } from "react";
 
 const items = [
   { id: "/reference/apteki", label: "Аптеки" },
@@ -26,19 +25,15 @@ const items = [
   { id: "/reference/prioriteti", label: "Приоритеты" },
 ];
 const navItems = [
-  { id: "/requests", label: "Заявки" },
+  { id: "/", label: "Заявки" },
   { id: "/reports", label: "Отчеты" },
 ];
 
 const collection = createListCollection({ items });
 
 export function Header() {
-  const [activePath, setActivePath] = useState("");
-
-  useEffect(() => {
-    const path = window.location.pathname;
-    setActivePath(path);
-  }, [window.location.pathname]);
+  const activePath = window.location.pathname || "";
+  console.log(activePath, "activePath");
   const allLink = [...navItems, ...items];
   const activeLink =
     allLink.filter((item) => item.id === activePath)[0]?.label || "Заявки";
