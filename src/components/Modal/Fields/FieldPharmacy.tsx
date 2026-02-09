@@ -28,7 +28,7 @@ export const FieldPharmacy = ({
     ],
   });
   return (
-    <Field.Root pb={{ base: "24px", md: "48px" }}>
+    <Field.Root pb="24px">
       <Field.Label
         fontWeight={400}
         color="#1C1C1C"

@@ -12,6 +12,7 @@ export const RequestToolbarMobile = ({
   const [isFocused, setIsFocused] = useState(false);
   return (
     <Flex
+      display={{ base: "flex", xl: "none" }}
       direction="column"
       width="100%"
       gap="3"

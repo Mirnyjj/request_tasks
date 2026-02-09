@@ -8,7 +8,6 @@ import { RequestsTable } from "./components/RequestsTable/RequestsTable";
 import { NewRequestModal } from "./components/Modal/NewRequestModal";
 import { mockRequests } from "./lib/mockData";
 import type { Status } from "./lib/types";
-import { useIsMobile } from "./hooks/useMobile";
 import { RequestToolbarMobile } from "./components/RequestToolbarMobile";
 
 export default function App() {
@@ -16,8 +15,6 @@ export default function App() {
   const [activeStatus, setActiveStatus] = useState<Status | "all">("all");
   const [showOnlyMine, setShowOnlyMine] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const isMobile = useIsMobile();
 
   const filteredRequests = useMemo(() => {
     return mockRequests.filter((request) => {
@@ -41,20 +38,18 @@ export default function App() {
       minH="100vh"
       bg="white"
       px={1}
-      pb={{ base: 0, md: "120px" }}
+      pb={{ base: 0, xl: "120px" }}
       display="flex"
       flexDirection="column"
       gap={{ base: "4", lg: "6" }}
     >
       <Header />
 
-      {!isMobile && (
-        <SearchBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onCreateNew={() => setIsModalOpen(true)}
-        />
-      )}
+      <SearchBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onCreateNew={() => setIsModalOpen(true)}
+      />
 
       <StatusTabs
         activeStatus={activeStatus}
@@ -63,26 +58,26 @@ export default function App() {
         onShowOnlyMineChange={setShowOnlyMine}
       />
 
-      {isMobile ? (
-        <RequestCardsMobile requests={filteredRequests} />
-      ) : (
-        <Box bg="white" w="full" px="40px">
-          <RequestsTable requests={filteredRequests} />
-        </Box>
-      )}
+      <RequestCardsMobile requests={filteredRequests} />
 
-      {isMobile && (
-        <RequestToolbarMobile
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onCreateNew={() => setIsModalOpen(true)}
-        />
-      )}
+      <Box
+        bg="white"
+        w="full"
+        px="40px"
+        display={{ base: "none", xl: "inline-block" }}
+      >
+        <RequestsTable requests={filteredRequests} />
+      </Box>
+
+      <RequestToolbarMobile
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onCreateNew={() => setIsModalOpen(true)}
+      />
 
       <NewRequestModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        isMobile={isMobile}
       />
     </Box>
   );

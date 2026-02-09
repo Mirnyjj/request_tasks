@@ -33,7 +33,7 @@ const collection = createListCollection({ items });
 
 export function Header() {
   const activePath = window.location.pathname || "";
-  console.log(activePath, "activePath");
+  // console.log(activePath, "activePath");
   const allLink = [...navItems, ...items];
   const activeLink =
     allLink.filter((item) => item.id === activePath)[0]?.label || "Заявки";
@@ -43,22 +43,23 @@ export function Header() {
       align="center"
       justify="space-between"
       p={{ base: "16px" }}
-      pr={{ md: "34px" }}
-      pl={{ md: "130px" }}
-      pt={{ md: "22px" }}
-      pb={{ md: "24px" }}
+      pr={{ xl: "34px" }}
+      pl={{ xl: "130px" }}
+      pt={{ xl: "22px" }}
+      pb={{ xl: "24px" }}
       bg="white"
       borderBottom="1px solid"
       borderBottomColor="rgba(217, 225, 236, 1)"
     >
       <SelectRoot
         collection={collection}
-        display={{ base: "flex", md: "none" }}
+        display={{ base: "flex", xl: "none" }}
         width="100%"
         flexDirection="column"
         position="relative"
       >
         <SelectTrigger
+          cursor="pointer"
           border="none"
           borderWidth="0"
           display="flex"
@@ -88,15 +89,9 @@ export function Header() {
           <GoTriangleDown color="black" size="24px" />
         </SelectTrigger>
 
-        <SelectContent
-          width="100%"
-          position="absolute"
-          top="100%"
-          left="0"
-          mt="1"
-        >
+        <SelectContent position="absolute" top="100%" left="0" mt="1">
           {allLink.map((item) => (
-            <SelectItem key={item.id} item={item.label} justifyContent="center">
+            <SelectItem key={item.id} item={item.label} justifyContent="start">
               <Link
                 key={item.id}
                 href={item.id}
@@ -123,7 +118,7 @@ export function Header() {
       </SelectRoot>
 
       <Stack
-        display={{ base: "none", md: "flex" }}
+        display={{ base: "none", xl: "flex" }}
         direction="row"
         gap="35px"
         fontFamily="Inter"
@@ -167,6 +162,7 @@ export function Header() {
           position="relative"
         >
           <SelectTrigger
+            cursor="pointer"
             border="none"
             borderWidth="0"
             display="flex"
@@ -204,6 +200,7 @@ export function Header() {
           >
             {items.map((item) => (
               <SelectItem
+                cursor="pointer"
                 key={item.id}
                 item={item.label}
                 justifyContent="center"
@@ -243,7 +240,7 @@ export function Header() {
         <Button
           bgColor="inherit"
           variant="outline"
-          display={{ base: "none", md: "flex" }}
+          display={{ base: "none", xl: "flex" }}
           gap="4px"
           padding="11px 21px 11px 24px"
           bg="rgba(241, 241, 241, 1)"

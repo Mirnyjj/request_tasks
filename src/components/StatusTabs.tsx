@@ -23,7 +23,7 @@ export function StatusTabs({
       const rest = statusTabs.slice(0, statusTabs.length - 1);
       return [last, ...rest];
     })(),
-    md: statusTabs,
+    xl: statusTabs,
   });
 
   return (
@@ -33,20 +33,20 @@ export function StatusTabs({
       display="flex"
       flexWrap="nowrap"
       gap="10px"
-      px={{ md: "40px" }}
+      px={{ xl: "40px" }}
       pl={{ base: "19px" }}
-      borderBottom={{ base: "none", md: "1px solid #DBE5F2" }}
-      pb={{ base: 0, md: "12px" }}
+      borderBottom={{ base: "none", xl: "1px solid #DBE5F2" }}
+      pb={{ base: 0, xl: "12px" }}
       overflowX="auto"
       whiteSpace="nowrap"
-      fontSize={{ base: "14px", md: "16px" }}
+      fontSize={{ base: "14px", xl: "16px" }}
       scrollbar="visible"
     >
       <Button
         px="12px"
         py="4px"
         bg={activeStatus === "all" ? "#F1F1F1" : "black"}
-        display={{ base: "flex", md: "none" }}
+        display={{ base: "flex", xl: "none" }}
         borderRadius="sm"
         justifyContent="center"
         alignItems="center"
@@ -69,8 +69,8 @@ export function StatusTabs({
           tabsForRender.map((tab) => (
             <Tabs.Trigger
               bg="#F1F1F1"
-              px={{ base: "12px", md: "17px" }}
-              py={{ base: "4px", md: "8px" }}
+              px={{ base: "12px", xl: "17px" }}
+              py={{ base: "4px", xl: "8px" }}
               key={tab.value}
               value={tab.value}
               whiteSpace="nowrap"
@@ -94,8 +94,8 @@ export function StatusTabs({
           ))}
         <Box w="3px" bg="#D9E1EC" mx={2} flexShrink={0} />
         <Tabs.Trigger
-          px={{ base: "12px", md: "17px" }}
-          py={{ base: "4px", md: "8px" }}
+          px={{ base: "12px", xl: "17px" }}
+          py={{ base: "4px", xl: "8px" }}
           bg="#F1F1F1"
           value="myRequests"
           flexShrink={0}

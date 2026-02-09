@@ -16,10 +16,9 @@ export const FieldTopic = ({ formData, handleChange }: FieldFormProps) => {
         id="topic"
         placeholder="Дайте заявке краткое название: например, сломался холодильник или не работает кондиционер"
         borderRadius={8}
-        minHeight="7.6vh"
         value={formData.topic}
         onChange={(e) => handleChange("topic", e.target.value)}
-        rows={3}
+        rows={2}
       />
     </Field.Root>
   );
