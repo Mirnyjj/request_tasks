@@ -54,7 +54,6 @@ export type SLAColor = "green" | "red" | "gray";
 export interface NewRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
-  isMobile?: boolean;
 }
 
 export type FormErrors = Partial<Record<keyof NewRequestFormData, string>>;

@@ -16,6 +16,7 @@ export function RequestCardsMobile({ requests }: RequestCardsProps) {
   if (requests.length === 0) {
     return (
       <Flex
+        display={{ base: "flex", xl: "none" }}
         direction="column"
         align="center"
         justify="center"
@@ -31,7 +32,13 @@ export function RequestCardsMobile({ requests }: RequestCardsProps) {
   }
 
   return (
-    <Box display="flex" flexDirection="column" gap="4" pb="140px" px="17px">
+    <Box
+      display={{ base: "flex", xl: "none" }}
+      flexDirection="column"
+      gap="4"
+      pb="140px"
+      px="17px"
+    >
       {groups.map((group) => (
         <Box key={group.label}>
           <Text
@@ -52,8 +59,7 @@ export function RequestCardsMobile({ requests }: RequestCardsProps) {
                 borderColor="gray.200"
                 borderRadius="8px"
                 p="4"
-                cursor="pointer"
-                _hover={{ borderColor: "gray.300" }}
+                _hover={{ borderColor: "gray.500" }}
               >
                 <Flex justify="space-between" align="flex-start" mb="3">
                   <Text fontWeight="medium" fontSize="sm" flex="1" pr="2">

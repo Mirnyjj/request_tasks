@@ -22,14 +22,14 @@ export const HelpInfo = () => {
       <Box bg="#FFFAD4" p="10px" borderRadius="10px" h="fit-content" minH="0">
         <Flex align="center" gap="2" mb="2">
           <IoMdWarning />
-          <Text fontWeight="400" fontSize={{ base: "12px", md: "10px" }}>
+          <Text fontWeight="400" fontSize={{ base: "12px", xl: "10px" }}>
             Заявка нужна, если:
           </Text>
         </Flex>
         <List.Root
           pl="20px"
           fontWeight="400"
-          fontSize={{ base: "12px", md: "10px" }}
+          fontSize={{ base: "12px", xl: "10px" }}
         >
           {helpNeeded.map((item, i) => (
             <List.Item
@@ -50,14 +50,14 @@ export const HelpInfo = () => {
       <Box bg="#FFEAEA" p="10px" borderRadius="10px" h="fit-content" minH="0">
         <Flex align="center" gap="2" mb="2">
           <RiCloseLargeFill size={12} color="red" />
-          <Text fontWeight="400" fontSize={{ base: "12px", md: "10px" }}>
+          <Text fontWeight="400" fontSize={{ base: "12px", xl: "10px" }}>
             Заявку создавать не нужно, если:
           </Text>
         </Flex>
         <List.Root
           pl="20px"
           fontWeight="400"
-          fontSize={{ base: "12px", md: "10px" }}
+          fontSize={{ base: "12px", xl: "10px" }}
         >
           {helpNotNeeded.map((item, i) => (
             <List.Item

@@ -22,7 +22,7 @@ export const FieldDescription = ({
           marginLeft: 0,
           textAlign: "left",
           whiteSpace: "pre-line",
-          lineHeight: 1.4,
+          lineHeight: 1.1,
         }}
         placeholder="Кратко опишите проблему:
 
@@ -33,7 +33,7 @@ export const FieldDescription = ({
         borderRadius={8}
         value={formData.description}
         onChange={(e) => handleChange("description", e.target.value)}
-        rows={8}
+        rows={6}
       />
     </Field.Root>
   );

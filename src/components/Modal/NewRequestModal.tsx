@@ -9,6 +9,7 @@ import {
   Input,
   Text,
   Badge,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 
 import type {
@@ -34,11 +35,7 @@ import { UploadFileMobile } from "./UploadFileMobile";
 import { FiFolder } from "react-icons/fi";
 import { HelpInfoMobile } from "./HelpInfoMobile";
 
-export function NewRequestModal({
-  isMobile,
-  isOpen,
-  onClose,
-}: NewRequestModalProps) {
+export function NewRequestModal({ isOpen, onClose }: NewRequestModalProps) {
   const [formData, setFormData] = useState<NewRequestFormData>({
     pharmacyId: "",
     priority: "medium",
@@ -57,7 +54,7 @@ export function NewRequestModal({
   const [isShowHelpInfo, setShowHelpInfo] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [successMessage, setSuccessMessage] = useState("");
-
+  const isMobile = useBreakpointValue({ base: true, xl: false });
   const validationForm = useMemo(() => {
     return Object.keys(validateForm(formData)).length === 0;
   }, [formData]);
@@ -106,7 +103,7 @@ export function NewRequestModal({
 
   const handleChange = <K extends keyof NewRequestFormData>(
     field: K,
-    value: NewRequestFormData[K],
+    value: NewRequestFormData[K]
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -166,7 +163,7 @@ export function NewRequestModal({
     }));
     setFilePreview((prev) => prev.filter((_, i) => i !== index));
   };
-
+  // console.log("isMobile", isMobile, window.innerWidth);
   return (
     <Dialog.Root
       open={isOpen}
@@ -178,14 +175,14 @@ export function NewRequestModal({
       <Portal>
         <Dialog.Backdrop bg="blackAlpha.500" />
 
-        <Dialog.Positioner p={{ base: 0, md: "4" }}>
+        <Dialog.Positioner p={{ base: 0, xl: "4" }}>
           <Dialog.Content
             w="100%"
-            maxW="1010px"
-            maxH="741px"
+            maxW="900px"
+            maxH="670px"
             minW="320px"
             mx="auto"
-            borderRadius={{ base: 0, md: "xl" }}
+            borderRadius={{ base: 0, xl: "xl" }}
           >
             {!isShowHelpInfo ? (
               <HelpInfoMobile setShowHelpInfo={setShowHelpInfo} />
@@ -193,12 +190,13 @@ export function NewRequestModal({
               <>
                 <Dialog.Header
                   display="flex"
-                  justifyContent={{ base: "flex-start", md: "space-between" }}
+                  justifyContent={{ base: "flex-start", xl: "space-between" }}
                   alignItems="center"
-                  border={{ base: "1px solid #DDDDDD", md: "none" }}
+                  border={{ base: "1px solid #DDDDDD", xl: "none" }}
                 >
                   {isMobile && (
                     <Dialog.CloseTrigger
+                      cursor="pointer"
                       asChild
                       position="relative"
                       top="0"
@@ -232,22 +230,9 @@ export function NewRequestModal({
                   flexDirection="column"
                   flex={1}
                 >
-                  {successMessage && (
-                    <Box
-                      mb="4"
-                      p="3"
-                      borderRadius="8px"
-                      bg="green.100"
-                      color="green.800"
-                      fontWeight="500"
-                      textAlign="center"
-                    >
-                      {successMessage}
-                    </Box>
-                  )}
                   <form onSubmit={handleSubmit}>
-                    <Flex gap="6" flexWrap={{ base: "wrap", md: "nowrap" }}>
-                      <Box flex="1" minW={{ base: "100%", md: "48%" }}>
+                    <Flex gap="6" flexWrap={{ base: "wrap", xl: "nowrap" }}>
+                      <Box flex="1" minW={{ base: "100%", xl: "48%" }}>
                         <FieldPharmacy
                           setFormData={setFormData}
                           handleChange={handleChange}
@@ -265,7 +250,7 @@ export function NewRequestModal({
 
                           {validationForm && (
                             <Button
-                              display={{ base: "flex", md: "none" }}
+                              display={{ base: "flex", xl: "none" }}
                               gap="5px"
                               bg="inherit"
                               p={0}
@@ -283,7 +268,7 @@ export function NewRequestModal({
                       </Box>
 
                       {/* Правая колонка */}
-                      <Box flex="1" minW={{ base: "0", md: "48%" }}>
+                      <Box flex="1" minW={{ base: "0", xl: "48%" }}>
                         <FieldTopic
                           handleChange={handleChange}
                           formData={formData}
@@ -302,7 +287,7 @@ export function NewRequestModal({
 
                         {/* Файлы */}
                         <Field.Root
-                          display={{ base: "none", md: "block" }}
+                          display={{ base: "none", xl: "block" }}
                           id="file"
                         >
                           <Field.Label
@@ -360,6 +345,19 @@ export function NewRequestModal({
                       </Flex>
                     )}
                   </form>
+                  {successMessage && (
+                    <Box
+                      mb="4"
+                      p="3"
+                      borderRadius="8px"
+                      bg="green.100"
+                      color="green.800"
+                      fontWeight="500"
+                      textAlign="center"
+                    >
+                      {successMessage}
+                    </Box>
+                  )}
                   {isMobile && (
                     <Flex flexDirection="column" gap="2px" mt="auto">
                       <Button

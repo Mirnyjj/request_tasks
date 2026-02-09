@@ -12,6 +12,7 @@ export function SearchBar({
 }: SearchBarProps) {
   return (
     <Flex
+      display={{ base: "none", xl: "flex" }}
       w="100%"
       gap="13px"
       as="nav"
